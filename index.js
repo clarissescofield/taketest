@@ -22,6 +22,7 @@ client.connect() // This method return a 'promise'.
     .catch((err) => console.error(err));
 
 let TOTALREPO = 5;
+var states = [];
 var count = 0;
 var avatar;
 var repositories =  new Array();
@@ -34,28 +35,34 @@ let github = require('./git.js')
 async function sendRepositories(user){
   avatar = await github.getAvatarUrl(user);
   repositories = await github.getRepositories(user);
-  console.log(repositories[0].title);
-  client.addMessageReceiver(() => true, function(message){
-    // Process received message
-    messageCarousel = {
-                    id: Lime.Guid(),
-                    type: "application/vnd.lime.collection+json",
-                    to: message.from,
-                    content: {
-                        itemType: "application/vnd.lime.document-select+json",
-                        items: []
-                    }
-    };
-    for (count=0;count<TOTALREPO;count++){
-      messageCarousel.content.items[count] = generateCarousel(count,repositories[count].title, repositories[count].description, avatar);
-    }
-    //console.log(messageCarousel);
-    client.sendMessage(messageCarousel);
-  });
+  try{
+    client.addMessageReceiver((message) => message.type === 'text/plain', function(message){
+      // Process received message
+    /*  if (typeof states[message.from] === 'undefined'){
+         client.sendMessage({
+              type: "text/plain",
+              content: "Oi john john",
+              to: message.from});
+      }*/
+
+      messageCarousel = {
+                      id: Lime.Guid(),
+                      type: "application/vnd.lime.collection+json",
+                      to: message.from,
+                      content: {
+                          itemType: "application/vnd.lime.document-select+json",
+                          items: []
+                      }
+      };
+      for (count=0;count<TOTALREPO;count++){
+        messageCarousel.content.items[count] = generateCarousel(count,repositories[count].title, repositories[count].description, avatar);
+      }
+      client.sendMessage(messageCarousel);
+    });
+  } catch{
+    console.error("MessageReceiver error");
+  }
 }
-
-sendRepositories("takenet");
-
 
 function generateCarousel(position,name, description,avatar){
     messageCarousel.content.items[position] = {
@@ -69,11 +76,7 @@ function generateCarousel(position,name, description,avatar){
           }
       }
     };
-    //console.log(messageCarousel.content.items[count]);
     return messageCarousel.content.items[position];
 }
 
-
-
-
-//octokit.repos.listPublic();
+sendRepositories("takenet");
