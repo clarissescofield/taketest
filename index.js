@@ -38,13 +38,6 @@ async function sendRepositories(user){
   try{
     client.addMessageReceiver((message) => message.type === 'text/plain', function(message){
       // Process received message
-    /*  if (typeof states[message.from] === 'undefined'){
-         client.sendMessage({
-              type: "text/plain",
-              content: "Oi john john",
-              to: message.from});
-      }*/
-
       messageCarousel = {
                       id: Lime.Guid(),
                       type: "application/vnd.lime.collection+json",
