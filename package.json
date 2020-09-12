@@ -11,7 +11,7 @@
     "@octokit/rest": "^16.35.0",
     "blip-sdk": "^7.3.4",
     "lime-transport-websocket": "^2.0.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {},
